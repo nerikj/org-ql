@@ -959,6 +959,14 @@ return an empty string."
                                                   (org-element-property :org-marker element))
                              (when (org-is-habit-p)
                                (org-habit-parse-todo))))
+           (marker (or (org-element-property :org-hd-marker element)
+                       (org-element-property :org-marker element)))
+           (org-not-done-regexp (when marker
+                                  (with-current-buffer (marker-buffer marker)
+                                    org-not-done-regexp)))
+           (org-todo-regexp (when marker
+                             (with-current-buffer (marker-buffer marker)
+                               org-todo-regexp)))
            (due-string (pcase (org-element-property :relative-due-date element)
                          ('nil "")
                          (string (format " %s " (org-add-props string nil 'face 'org-ql-view-due-date)))))
@@ -973,7 +981,9 @@ return an empty string."
              'org-category category
              'todo-state todo-keyword
              'tags tag-list
-             'org-habit-p habit-property)))))
+             'org-habit-p habit-property
+             'org-not-done-regexp org-not-done-regexp
+             'org-todo-regexp org-todo-regexp)))))
 
 (defun org-ql-view--add-faces (element)
   "Return ELEMENT with deadline and scheduled faces added."
