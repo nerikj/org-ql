@@ -863,7 +863,7 @@ respectively."
                                       (zero-or-more (not (any "\n\":"))))
                                  (zero-or-more (not (any "\n\":")))))
                       (group (zero-or-more (not (any "\n")))) "\n"
-                      (63 (group (*\? (not (any " "))) "\n"))
+                      (63 (group (*\? (not (any "\0"))) "\n"))
                       (zero-or-more (any "	 "))
                       "#+end_src")
                 t))
@@ -1003,7 +1003,7 @@ value of `org-ql-predicates')."
                                          (peg-run (peg ,(caar pexs))
                                                   (lambda (failures)
                                                     (when org-ql-signal-peg-failure
-                                                      (peg-signal-failure failures)))))))))
+                                                      (peg-signal-failure failures))))) t))))
                         (pcase parsed-sexp
                           (`(,one-predicate) one-predicate)
                           (`(,_ . ,_) (cons boolean (reverse parsed-sexp)))
